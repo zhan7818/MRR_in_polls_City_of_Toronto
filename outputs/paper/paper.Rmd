@@ -13,6 +13,7 @@ bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
+# Load the required packages for this paper
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
@@ -223,6 +224,8 @@ Development and Reviews of Front Yard Parking Poll Requirements
 # resulting in a poor graph viewing experience
 # A line was added to help readers see which polls are not considered valid
 # due to having less ballots cast than the required number
+
+# This graph uses the ballots_needed_to_proceed_double variable on the y-axis
 polls_clean[-c(182),] |>
   ggplot(aes(x = ballots_cast,
              y = ballots_needed_to_proceed_double,
@@ -267,6 +270,8 @@ Poll Requirements [@citebackground37202], to the point where it is now reduced f
 # resulting in a poor graph viewing experience
 # A line was added to help readers see which polls are not considered valid
 # due to having less ballots cast than the required number
+
+# This graph uses the ballots_needed_to_proceed variable on the y-axis
 polls_clean[-c(182),] |>
   ggplot(aes(x = ballots_cast,
              y = ballots_needed_to_proceed,

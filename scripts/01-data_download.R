@@ -1,8 +1,9 @@
 #### Preamble ####
 # Purpose: Download data from opendatatoronto
 # Author: Tian Yi Zhang
-# Data: 5 February 2022
+# Date: 6 February 2022
 # Contact: psyminette.zhang@mail.utoronto.ca
+# License: MIT
 
 #### Workspace setup ####
 library(tidyverse)

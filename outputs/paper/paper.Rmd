@@ -1,11 +1,11 @@
 ---
-title: "Polls Conducted by the City of Toronto in 2021"
-subtitle: "My subtitle if needed"
+title: "Minimum Response Rate is a Crucial Part of the Polling Procedures"
+subtitle: "Traffic-Calming-related polls are still consistently invalidated by the amended minimum response rate in the City of Toronto"
 author: 
   - Tian Yi Zhang
 thanks: "Code and data are available at: https://github.com/zhan7818/sta304_paper1_repo."
 date: "`r format(Sys.time(), '%d %B %Y')`"
-abstract: "Polls are a widely used and effective way for administrative divisions to determine the general opinion of residents and businesses on various topics. We obtain and analyze the polls conducted by the city of Toronto broken down on a locational and temporal basis and analyze it using a graph and a table. Third sentence. Fourth sentence."
+abstract: "Polls are a widely used and effective way for administrative divisions to determine the general opinion of residents and businesses on various topics. We obtain and analyze the polls conducted by the city of Toronto broken down based on the type of application and analyze it using two graphs and a table. The data shows a consistent trend for parking-related polls to meet the required engagement rate, while the opposite is seen for traffic calming applications. The findings suggest a change in percentage for the number of returned ballots required for polls regarding traffic calming."
 output:
   bookdown::pdf_document2
 toc: FALSE
@@ -17,117 +17,288 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(janitor) # for clean_names()
-library(lubridate) # for as_date()
 library(knitr) # for kable()
-
-library(palmerpenguins)
 ```
 
 # Introduction
 
-You can and should cross-reference sections and sub-sections. For instance, Section \@ref(data). R Markdown automatically makes the sections lower case and adds a dash to spaces to generate labels, for instance, Section \@ref(first-discussion-point). 
+What is the best way to find out what people think about a particular topic?
+Ask them. This sentiment is shared
+by Joshua Clinton from the Vanderbilt University [@citevanderbilt], who believes
+that "public opinion polling, done right, remains the best way of obtaining
+citizens' opinions." While he does raise the point that polls should not be
+the only thing that public policy is based on, it is nevertheless a good way to
+gauge the public's opinions and expectations. This is the crux of the concept 
+of polling, and is why it is a widely employed tactic.
+As an administrative body, the City of Toronto is no
+stranger to utilizing polls to determine the
+opinions of its residents and business owners. These polls could be for any
+topic, ranging from changes to by-laws, to a simple addition of a speed hump
+on a particular road, and have no doubt aided the City of Toronto in
+constructing improvements to the city.
 
+A important factor in conducting a poll is the idea
+of the $\textbf{minimum response rate}$, which could be described as 
+the percentage
+of ballots that need to be returned in order for the poll to be considered
+valid. The City of Toronto initially adopted a minimum response rate of 50% 
+in 2006 [@citebackground37202], and while many polls were considered valid
+under this 50% rate, it is also true that a significant portion of polls were
+invalidated because of it. This would not be an issue on its own, but when
+the invalidated polls often have an overwhelmingly positive response, as is
+illustrated by Councilor Frances Nunziata [@citebackground35072], there is
+a case to be made for the argument that perhaps the minimum response rate
+of 50% has invalidated many useful polls and is therefore too high. The
+minimum response rate was eventually lowered down to 25% after many reviews
+[@citebackground37202], and it is the primary goal of this paper to examine
+whether this change was a meaningful one.
 
+This paper will be using the dataset for polls conducted by the City of Toronto
+from 2015 to 2021 to analyse the relationship between the minimum response rate
+and the number of ballots cast by the voters to see if the change made to
+the minimum response rate had any impact on the validity of polls, particularly
+the ones concerned with Front Yard Parking and Traffic Calming. The results
+from this analysis will have clear implications for further changes towards
+the minimum response rate for polls conducted by the City.
+
+The remainder of this paper contains two sections: Section \@ref(data) 
+explains the sources of the dataset, how it is structured, its strengths,
+and weakness. The findings from observations on the graph and table are also
+included in this section.
+Section \@ref(footnote) contains a link to the repo where the code
+used to construct this paper can be found.
+Section \@ref(references) contains the references.
 
 # Data
 
-Paragraph or two introducing the dataset broadly. We obtain our data from
+The dataset used in this paper is obtained from
 the City of Toronto open data portal, using the `opendatatoronto` package
-[@citeopendatatoronto] and the statistical programming language R [@citeR]
+[@citeopendatatoronto] and the statistical programming language R [@citeR].
+A new variable, `ballots_needed_to_proceed_double`, will be constructed by
+doubling the number of ballots needed to proceed, `ballots_needed_to_proceed`,
+to simulate the minimum response rate before the amendment from 50% to 25%
+as discussed in Development and Reviews of Front Yard Parking Poll Requirements
+[@citebackground37202]. This newly constructed variable is used in
+Figure \@ref(fig:graph).
 
-Our data is of penguins (Figure \@ref(fig:bills)).
+In addition to using R [@citeR] to construct this paper, several R packages are used
+as well: The feature names in the dataset are cleaned using the `janitor` package
+[@citejani]. Subsequent graphs and tables shown in this paper also utilize the
+`tidyverse` [@citetidy] and `knitr` [@citeknitr] package respectively.
 
-Show an extract of the dataset (Table \@ref(tab:dataextract)).
+The dataset is collected by the Toronto City Clerk's Office,
+whom are responsible for administering polls and collecting the results. The
+data collection started from as early as April 1, 2015, and is updated daily
+after each closing and certification of a poll.
+The polls included in this dataset are used to determine whether property owners
+and businesses have a favorable attitude towards a change in their neighbourhood
+that could affect them. The types of polls are divided into the following five
+categories:
+
+* Boulevard Cafes
+* Off-Street Parking (such as front yard parking and commercial boulevard parking)
+* Permit Parking
+* Traffic Calming
+* Business Improvement Area
+
+The majority of the polls conducted in this dataset are parking and traffic-calming
+related, with the rest of the polls dealing with public opinion concerning business 
+improvement areas and boulevard cafes.
+
+According to information gathered from chapter 190 of City of Toronto bylaws 
+[@citechp] and the City of Toronto webpage regarding polls [@citeopenpoll],
+the procedure of 
+polling can be summarized as follows: First, the City reviews a proposal for
+an application and decides whether to approve it. If approved, the City
+conducts a poll of the population in the area affected by the
+application. Every owner, resident and tenant at least 18 years old in the
+affected area will be mailed the materials necessary to engage in the poll,
+including but not limited to: a notice regarding the poll and its deadline,
+the ballot distributed, and a return envelope. Then, the results from the 
+poll are collected. Note that for a poll to be considered positive, it must 
+first reach a certain percentage of ballots returned so as to ensure the poll is
+an accurate depiction of the general consensus in the area of interest. 
+This threshold differs for each type of poll as determined by specific 
+by-laws and/or city policies. Lastly, should the result of the poll be 
+positive, the application can then proceed through the approval process 
+(Final approval by City Council may be required based on the type of poll).
+
+The dataset contains several features that are variations of other features
+with additional details that may otherwise be useful for a different analysis.
+For example, the dataset records both the number of ballots distributed,
+`BALLOTS_DISTRIBUTED`, and the number of ballots returned to City Clerk's Office,
+`BALLOTS_RECEIVED_BY_VOTERS`. The difference in the data recorded between these
+two variables are minor or nonexistent and would perhaps be useful in another
+analysis regarding the element of human error present in the execution of polling
+procedures. Other minor but potentially crucial details, such as the number of
+ballots received but not clearly marked as "in favour" or "opposed", recorded as
+`BALLOTS_SPOILED`, are also included in the dataset. These small details included
+in the dataset allow for more accurate data analysis depending on the topic
+presented in a paper, and speaks volumes about how comprehensive the dataset
+is.
+
+That is not to say that the dataset is flawless, however. Certain issues 
+arise with the aforementioned polling methods, too: Despite
+stating that every eligible voter in the affected area will be able to
+participate in the poll, it is not guaranteed that this will be the case.
+Table \@ref(tab:dataextract) showcases this discrepancy:
 
 ```{r dataextract, echo=FALSE, warning=FALSE, message=FALSE}
 # Read in the dataset
 polls_conducted_by_city <- 
   read_csv(here::here("inputs/data/polls_conducted_by_city.csv"))
 
-# Clean the dataset and select only the polls conducted in 2021
+# Clean the dataset
 polls_clean <- polls_conducted_by_city |>
-  clean_names() %>%
-  mutate(open_date = as_date(open_date)) %>% # change to date object format
-  filter(open_date >= as_date("2021-01-01")) # get only the polls in 2021
-  
+  clean_names()
+
+# Create a new variable that doubles the number of ballots required to proceed
+polls_clean <- polls_clean |>
+  mutate(ballots_needed_to_proceed_double = ballots_needed_to_proceed * 2)
+
+# Create a table that showcases the dataset
 polls_clean |> 
-  select(address, ballots_cast, ballots_distributed) |>
+  select(address, potential_voters, ballots_distributed, ballots_cast) |>
   drop_na() |>
   slice(1:10) |> 
   kable(
     caption = "First ten rows of a dataset that shows poll engagement
-    in Toronto in 2021",
-    col.names = c("Address","Ballots Cast","Ballots Distributed"),
+    in Toronto from 2015 to 2021",
+    col.names = c("Address","Potential Voters","Ballots Distributed","Ballots Cast"),
     digits = 1,
     booktabs = TRUE,
     linesep = ""
   )
 ```
 
-Paragraph or two more about Table \@ref(tab:dataextract).
+Note that the number of potential voters differs from the number of ballots
+distributed when they should ideally be equal. This difference could be due to
+human errors or is intentional, which means that
+even if all ballots distributed are properly returned, the results are not
+representative of the true population. Alternatively, this discrepancy could be
+due to the way the data is collected and labelled: The City of Toronto's
+[@citeopendatatoronto]
+official description of `POTENTIAL_VOTERS`, the feature in the dataset which
+records the number of potential voters, states
+that this feature represents the "number of people residing within poll
+boundary range." However, as we previously stated, there are certain
+requirements that must be fulfilled for one to be considered eligible for the poll
+(for example, all participants must be at least 18 years of age). The vagueness
+in the description and naming of the `POTENTIAL_VOTERS` variable means that
+we are not sure if residents under the age of 18 in the affected area
+are also included in the dataset
+as a "potential voter", and regrettably cannot accurately assess the reasoning 
+behind the discrepancy between
+the number of potential voters and the number of ballots distributed.
 
-We are interested in the relationship between the ratio of ballots cast to
-ballots distributed and the type of application, because this could be used as
-a measure of the public's willingness to engage in polls depending on the type
-of application and affect the choice of poll distribution in the future.
+Assuming that the first reasoning is true, then the dataset may be biased in
+several possible ways depending on how the ballot is distributed: Recall from
+chapter 190 of the City of Toronto bylaws [@citechp] that the City Clerk's
+Office is responsible for compiling the polling list which includes the names
+of the participants and their addresses. Is it possible that a racial bias may
+be present in the dataset as the City Clerk's Office intentionally omits
+affected residents of a certain minority group? Or perhaps the City Clerk's
+Office is prone to contextual bias as they get to decide which residents
+are considered affected by the application proposal and which ones are not?
+There is no way to
+analyze these possibility because relevant data such as the ethnicity of
+affected residents are not included in the dataset, a flaw that we should not
+ignore when examining the reliability of the dataset.
 
-Figure \@ref(fig:graph) shows the relationship between the number of ballots returned and the
-number of ballots distributed.
+The next primary subject of interest is the relationship between the number of
+ballots cast, the number of ballots needed for the poll to be considered 
+valid, and the type of application. This relationship could be used as a measure
+of the public's willingness to engage in polls depending on the type
+of application and affect future choices for setting new percentages of returned
+ballots needed to consider a poll valid. Figure \@ref(fig:graph) shows
+the relationship between the number of ballots
+returned and the number of ballots needed to proceed
+$\textbf{before the reduction of minimum response rate from 50\% to 25\%}$
+as discussed in
+Development and Reviews of Front Yard Parking Poll Requirements
+[@citebackground37202].
 
-Our data is of poll engagement rate in Toronto
-
-```{r graph, fig.cap="Ballots distributed versus ballots cast for each type of application", echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
-polls_clean |>
-  ggplot(aes(x = ballots_distributed,
-             y = ballots_cast,
+```{r graph, fig.cap="Ballots distributed versus ballots cast for each type of application, 50% return requirement", echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
+# make a graph. row 182 with id=800776 is filtered out because it is very far
+# away from the rest of the dataset and squishes the rest of the dataset,
+# resulting in a poor graph viewing experience
+# A line was added to help readers see which polls are not considered valid
+# due to having less ballots cast than the required number
+polls_clean[-c(182),] |>
+  ggplot(aes(x = ballots_cast,
+             y = ballots_needed_to_proceed_double,
              color = application_for)) +
   geom_point(alpha = 0.8) +
-  scale_color_brewer(palette = "Blues")
+  geom_abline(intercept=0, slope=1, size=1, alpha=0.3) +
+  labs(y = "Number of Ballots Needed to Proceed",
+       x = "Number of Ballots Cast")
 ```
 
+We can see from Figure \@ref(fig:graph) that the majority of the polls from
+this dataset are for traffic calming and parking applications, as mentioned
+earlier in the data segment of this paper. Note that the graph shows the
+majority of parking-related polls having less
+than 100 ballots cast. This makes sense because applications concerning parking
+only affects the residents of the property being approved for parking.
+In Contrast, polls regarding traffic calming vary much more in terms of number
+of ballots cast, which makes sense because improvements to certain
+road sections would affect more people than the rest.
+
+The black line represents the line where the ballots cast is equal to the
+required number of ballots needed to proceed; the points above the black line
+represents polls that did not meet the required number of returned ballots to
+be considered valid. Note that the number of required returned ballots for a
+poll to be considered valid was 50% of the number of ballots distributed.
+We can see that Councillor Frances Nunziata's [@citebackground35072] 
+concerns are supported by this dataset; There was not just a few, but a significant
+number of Front Yard Parking polls considered invalid polls under the 50%
+minimum response rate policy.
+
+The previously mentioned percentage of 50 was subject to many discussions
+and revisions, as noted in Development and Reviews of Front Yard Parking
+Poll Requirements [@citebackground37202], to the point where it is now reduced from
+50% to 25%, the latter shown in Figure \@ref(fig:graph2).
 
 
-Talk more about it.
-
-Also bills and their average (Figure \@ref(fig:billssssss)). (Notice how you can change the height and width so they don't take the whole page?)
-
-```{r billssssss, fig.cap="More bills of penguins", echo = FALSE, fig.width=8, fig.height=4}
-
-# This needs to be about the random data tha tI sasmpled?
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = FALSE) +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+```{r graph2, fig.cap="Ballots distributed versus ballots cast for each type of application, 25% return requirement", echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
+# make a graph. row 182 with id=800776 is filtered out because it is very far
+# away from the rest of the dataset and squishes the rest of the dataset,
+# resulting in a poor graph viewing experience
+# A line was added to help readers see which polls are not considered valid
+# due to having less ballots cast than the required number
+polls_clean[-c(182),] |>
+  ggplot(aes(x = ballots_cast,
+             y = ballots_needed_to_proceed,
+             color = application_for)) +
+  geom_point(alpha = 0.8) +
+  geom_abline(intercept=0, slope=1, size=1, alpha=0.3) +
+  labs(y = "Number of Ballots Needed to Proceed",
+       x = "Number of Ballots Cast")
 ```
 
-Talk way more about it. 
+Observations from Figure \@ref(fig:graph2) tells that that most of the 
+applications for parking-related applications
+meet the amended minimum response rate of 25%. This,
+in conjunction with our observation from Figure \@ref(fig:graph), shows
+that the issues brought up and reviewed by City Council [@citebackground37202],
+particularly Councillor Frances Nunziata [@citebackground35072], were valid
+concerns regarding the polling procedures, and that the reduction of
+minimum response rate from 50% to 25% was a step in the right direction.
 
+Another important piece of information presented by Figure \@ref(fig:graph2)
+is that despite the reduction in the required number of ballots returned,
+a significant portion of polls regarding traffic calming still lies above
+the black line, failings to meet the required amount of 
+25% of distributed ballots returned to be considered a valid poll. It would be
+bizarre to attribute consistent invalidation of polls to a simple lack of engagement
+from the affected population. Therefore, this observation implies
+that there may be a need for further reduction in percentage 
+for the poll validity requirement.
 
+# Footnote
 
-# Model
-
-\begin{equation}
-Pr(\theta | y) = \frac{Pr(y | \theta) Pr(\theta)}{Pr(y)}  (\#eq:bayes)
-\end{equation}
-
-Equation \@ref(eq:bayes) seems useful, eh?
-
-Here's a dumb example of how to use some references: In paper we run our analysis in `R` [@citeR]. We also use the `tidyverse` which was written by @thereferencecanbewhatever If we were interested in baseball data then @citeLahman could be useful. 
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
-
-# Discussion
-
-\appendix
-
-# Appendix {-}
-
-
-# Additional details
-
+The code and data supporting this analysis is available at:
+https://github.com/zhan7818/MRR_in_polls_City_of_Toronto
 
 \newpage
 

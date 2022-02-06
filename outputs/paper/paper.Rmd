@@ -1,12 +1,11 @@
 ---
-title: "My title"
+title: "Polls Conducted by the City of Toronto in 2021"
 subtitle: "My subtitle if needed"
 author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: LINK."
+  - Tian Yi Zhang
+thanks: "Code and data are available at: https://github.com/zhan7818/sta304_paper1_repo."
 date: "`r format(Sys.time(), '%d %B %Y')`"
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "Polls are a widely used and effective way for administrative divisions to determine the general opinion of residents and businesses on various topics. We obtain and analyze the polls conducted by the city of Toronto broken down on a locational and temporal basis and analyze it using a graph and a table. Third sentence. Fourth sentence."
 output:
   bookdown::pdf_document2
 toc: FALSE
@@ -17,6 +16,10 @@ bibliography: references.bib
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
+library(janitor) # for clean_names()
+library(lubridate) # for as_date()
+library(knitr) # for kable()
+
 library(palmerpenguins)
 ```
 
@@ -28,17 +31,61 @@ You can and should cross-reference sections and sub-sections. For instance, Sect
 
 # Data
 
+Paragraph or two introducing the dataset broadly. We obtain our data from
+the City of Toronto open data portal, using the `opendatatoronto` package
+[@citeopendatatoronto] and the statistical programming language R [@citeR]
+
 Our data is of penguins (Figure \@ref(fig:bills)).
 
-```{r bills, fig.cap="Bills of penguins", echo = FALSE}
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = FALSE) +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+Show an extract of the dataset (Table \@ref(tab:dataextract)).
+
+```{r dataextract, echo=FALSE, warning=FALSE, message=FALSE}
+# Read in the dataset
+polls_conducted_by_city <- 
+  read_csv(here::here("inputs/data/polls_conducted_by_city.csv"))
+
+# Clean the dataset and select only the polls conducted in 2021
+polls_clean <- polls_conducted_by_city |>
+  clean_names() %>%
+  mutate(open_date = as_date(open_date)) %>% # change to date object format
+  filter(open_date >= as_date("2021-01-01")) # get only the polls in 2021
+  
+polls_clean |> 
+  select(address, ballots_cast, ballots_distributed) |>
+  drop_na() |>
+  slice(1:10) |> 
+  kable(
+    caption = "First ten rows of a dataset that shows poll engagement
+    in Toronto in 2021",
+    col.names = c("Address","Ballots Cast","Ballots Distributed"),
+    digits = 1,
+    booktabs = TRUE,
+    linesep = ""
+  )
 ```
+
+Paragraph or two more about Table \@ref(tab:dataextract).
+
+We are interested in the relationship between the ratio of ballots cast to
+ballots distributed and the type of application, because this could be used as
+a measure of the public's willingness to engage in polls depending on the type
+of application and affect the choice of poll distribution in the future.
+
+Figure \@ref(fig:graph) shows the relationship between the number of ballots returned and the
+number of ballots distributed.
+
+Our data is of poll engagement rate in Toronto
+
+```{r graph, fig.cap="Ballots distributed versus ballots cast for each type of application", echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
+polls_clean |>
+  ggplot(aes(x = ballots_distributed,
+             y = ballots_cast,
+             color = application_for)) +
+  geom_point(alpha = 0.8) +
+  scale_color_brewer(palette = "Blues")
+```
+
+
 
 Talk more about it.
 
@@ -72,24 +119,7 @@ Here's a dumb example of how to use some references: In paper we run our analysi
 
 We can use maths by including latex between dollar signs, for instance $\theta$.
 
-
-# Results
-
 # Discussion
-
-## First discussion point
-
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
-
-## Second discussion point
-
-## Third discussion point
-
-## Weaknesses and next steps
-
-Weaknesses and next steps should also be included.
-
-\newpage
 
 \appendix
 

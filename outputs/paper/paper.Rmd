@@ -3,9 +3,9 @@ title: "Minimum Response Rate is a Crucial Part of the Polling Procedures"
 subtitle: "Traffic-Calming-related polls are still consistently invalidated by the amended minimum response rate in the City of Toronto"
 author: 
   - Tian Yi Zhang
-thanks: "Code and data are available at: https://github.com/zhan7818/sta304_paper1_repo."
+thanks: "Code and data supporting this paper are available at: https://github.com/zhan7818/MRR_in_polls_City_of_Toronto."
 date: "`r format(Sys.time(), '%d %B %Y')`"
-abstract: "Polls are a widely used and effective way for administrative divisions to determine the general opinion of residents and businesses on various topics. We obtain and analyze the polls conducted by the city of Toronto broken down based on the type of application and analyze it using two graphs and a table. The data shows a consistent trend for parking-related polls to meet the required engagement rate, while the opposite is seen for traffic calming applications. The findings suggest a change in percentage for the number of returned ballots required for polls regarding traffic calming."
+abstract: "Polls are a widely used and effective way for administrative divisions to determine the general opinion of residents and businesses on various topics. We obtain the polls conducted by the city of Toronto broken down based on the type of application and analyze it using two graphs and a table. The data shows a consistent trend for parking-related polls to meet the required engagement rate, while the opposite is seen for traffic calming applications. The findings suggest a change in percentage for the number of returned ballots required for polls regarding traffic calming."
 output:
   bookdown::pdf_document2
 toc: FALSE
@@ -37,7 +37,7 @@ topic, ranging from changes to by-laws, to a simple addition of a speed hump
 on a particular road, and have no doubt aided the City of Toronto in
 constructing improvements to the city.
 
-A important factor in conducting a poll is the idea
+An important factor in conducting a poll is the idea
 of the $\textbf{minimum response rate}$, which could be described as 
 the percentage
 of ballots that need to be returned in order for the poll to be considered
@@ -54,20 +54,18 @@ minimum response rate was eventually lowered down to 25% after many reviews
 whether this change was a meaningful one.
 
 This paper will be using the dataset for polls conducted by the City of Toronto
-from 2015 to 2021 to analyse the relationship between the minimum response rate
+from 2015 to 2021, obtained from City of Toronto's Open Data Portal,
+to analyze the relationship between the minimum response rate
 and the number of ballots cast by the voters to see if the change made to
 the minimum response rate had any impact on the validity of polls, particularly
 the ones concerned with Front Yard Parking and Traffic Calming. The results
 from this analysis will have clear implications for further changes towards
 the minimum response rate for polls conducted by the City.
 
-The remainder of this paper contains two sections: Section \@ref(data) 
+The remainder of this paper contains Section \@ref(data), which
 explains the sources of the dataset, how it is structured, its strengths,
-and weakness. The findings from observations on the graph and table are also
+and its weaknesses. The findings from observations on the graphs and table are also
 included in this section.
-Section \@ref(footnote) contains a link to the repo where the code
-used to construct this paper can be found.
-Section \@ref(references) contains the references.
 
 # Data
 
@@ -192,7 +190,7 @@ behind the discrepancy between
 the number of potential voters and the number of ballots distributed.
 
 Assuming that the first reasoning is true, then the dataset may be biased in
-several possible ways depending on how the ballot is distributed: Recall from
+several possible ways depending on how the ballots are distributed: Recall from
 chapter 190 of the City of Toronto bylaws [@citechp] that the City Clerk's
 Office is responsible for compiling the polling list which includes the names
 of the participants and their addresses. Is it possible that a racial bias may
@@ -208,9 +206,10 @@ ignore when examining the reliability of the dataset.
 The next primary subject of interest is the relationship between the number of
 ballots cast, the number of ballots needed for the poll to be considered 
 valid, and the type of application. This relationship could be used as a measure
-of the public's willingness to engage in polls depending on the type
-of application and affect future choices for setting new percentages of returned
-ballots needed to consider a poll valid. Figure \@ref(fig:graph) shows
+of how often a poll is invalidated by the minimum response rate, separated
+depending on the type
+of application, and affects future choices for setting new minimum
+response rates. Figure \@ref(fig:graph) shows
 the relationship between the number of ballots
 returned and the number of ballots needed to proceed
 $\textbf{before the reduction of minimum response rate from 50\% to 25\%}$
@@ -235,10 +234,11 @@ polls_clean[-c(182),] |>
 ```
 
 We can see from Figure \@ref(fig:graph) that the majority of the polls from
-this dataset are for traffic calming and parking applications, as mentioned
-earlier in the data segment of this paper. Note that the graph shows the
-majority of parking-related polls having less
-than 100 ballots cast. This makes sense because applications concerning parking
+this dataset are for traffic calming and parking applications.
+Note that the graph shows the
+majority of parking-related polls are close to each other on the graph and
+generally have less than 100 ballots cast.
+This makes sense because applications concerning parking
 only affects the residents of the property being approved for parking.
 In Contrast, polls regarding traffic calming vary much more in terms of number
 of ballots cast, which makes sense because improvements to certain
@@ -246,9 +246,10 @@ road sections would affect more people than the rest.
 
 The black line represents the line where the ballots cast is equal to the
 required number of ballots needed to proceed; the points above the black line
-represents polls that did not meet the required number of returned ballots to
-be considered valid. Note that the number of required returned ballots for a
-poll to be considered valid was 50% of the number of ballots distributed.
+represent polls that did not meet the required number of returned ballots needed
+to be considered valid. Note that in Figure \@ref(fig:graph),
+the number of required returned ballots for a
+poll to be considered valid is 50% of the number of ballots distributed.
 We can see that Councillor Frances Nunziata's [@citebackground35072] 
 concerns are supported by this dataset; There was not just a few, but a significant
 number of Front Yard Parking polls considered invalid polls under the 50%
@@ -276,7 +277,7 @@ polls_clean[-c(182),] |>
        x = "Number of Ballots Cast")
 ```
 
-Observations from Figure \@ref(fig:graph2) tells that that most of the 
+Observations from Figure \@ref(fig:graph2) tells us that most of the 
 applications for parking-related applications
 meet the amended minimum response rate of 25%. This,
 in conjunction with our observation from Figure \@ref(fig:graph), shows
@@ -288,17 +289,12 @@ minimum response rate from 50% to 25% was a step in the right direction.
 Another important piece of information presented by Figure \@ref(fig:graph2)
 is that despite the reduction in the required number of ballots returned,
 a significant portion of polls regarding traffic calming still lies above
-the black line, failings to meet the required amount of 
-25% of distributed ballots returned to be considered a valid poll. It would be
-bizarre to attribute consistent invalidation of polls to a simple lack of engagement
+the black line, failings to meet the 25% minimum response rate. It would be
+bizarre to attribute this observed consistent invalidation of polls to a simple
+lack of engagement
 from the affected population. Therefore, this observation implies
-that there may be a need for further reduction in percentage 
+that there may be a need for further reduction in minimum response rate
 for the poll validity requirement.
-
-# Footnote
-
-The code and data supporting this analysis is available at:
-https://github.com/zhan7818/MRR_in_polls_City_of_Toronto
 
 \newpage
 
